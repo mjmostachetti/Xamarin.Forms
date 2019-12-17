@@ -43,16 +43,16 @@ steps:
       TargetFolder: '$(System.DefaultWorkingDirectory)/nuget'
 
   - task: NuGetCommand@2
-    displayName: 'NuGet restore $(nugetPackageVersion)'
+    displayName: 'NuGet restore'
     inputs:
       restoreSolution: $(slnPath)
-      msbuildArguments: /p:XamarinFormsVersion=$(nugetPackageVersion)
+      msbuildArguments: /p:XamarinFormsVersion=$env:nugetPackageVersion
 
   - task: MSBuild@1
     displayName: 'Build solution Xamarin.Forms.Build.Tasks/Xamarin.Forms.Build.Tasks.csproj'
     inputs:
       solution: Xamarin.Forms.Build.Tasks/Xamarin.Forms.Build.Tasks.csproj
-      msbuildArguments: /p:XamarinFormsVersion=$(nugetPackageVersion)
+      msbuildArguments: /p:XamarinFormsVersion=$env:nugetPackageVersion
 
   - task: InstallAppleCertificate@2
     displayName: 'Install an Apple certificate'
@@ -66,11 +66,11 @@ steps:
       provProfileSecureFile: 'Xamarin Forms iOS Provisioning.mobileprovision'
 
   - task: XamariniOS@2
-    displayName: 'Build Xamarin.iOS solution $(nugetPackageVersion)  $(slnPath) '
+    displayName: 'Build Xamarin.iOS solution $(slnPath) '
     inputs:
       solutionFile: $(slnPath)
       configuration: $(buildConfiguration)
-      msbuildArguments: /p:XamarinFormsVersion=$(nugetPackageVersion)
+      msbuildArguments: /p:XamarinFormsVersion=$env:nugetPackageVersion
 
 
   - task: CopyFiles@2
