@@ -101,8 +101,46 @@ jobs:
     buildConfiguration: $(DefaultBuildConfiguration)
     provisionatorPath : 'build/provisioning/provisioning.csx'
 
-- job: osx
-  displayName: OSX Phase
+# - job: osx
+#   displayName: OSX Phase
+#   pool:
+#     name: $(macOSVmImage)
+#     demands:
+#       - Agent.OS -equals darwin
+#       - sh
+#       - msbuild
+#       - Xamarin.iOS
+#   variables:
+#     provisionator.osxPath : 'build/provisioning/provisioning.csx'
+#     provisionator.signPath : 'build/provisioning/provisioning_sign.csx'
+#     buildConfiguration: $(DefaultBuildConfiguration)
+#     slnPath: $(SolutionFile)
+#     iOSCertSecureFileName: 'Xamarin Forms iOS Certificate.p12'
+#     iOSProvisioningSecureFileName: 'Xamarin Forms iOS Provisioning.mobileprovision'
+#     monoVersion : $(MONO_VERSION)
+#     nugetPackageVersion : ''
+#   steps:
+#      - template: build/steps/build-osx.yml
+
+- job: nuget_pack
+  displayName: Nuget Phase
+  dependsOn:
+   - win
+  condition: succeeded()
+  pool:
+    name: $(winVmImage)
+  variables:
+    FormsIdAppend: ''
+    buildConfiguration: $(DefaultBuildConfiguration)
+    nugetPackageVersion : $[ dependencies.win.outputs['debug.winbuild.xamarinformspackageversion'] ]
+  steps:
+     - template: build/steps/build-nuget.yml
+
+     
+- job: osx_with_nuget
+  displayName: OSX Phase With Nuget
+  dependsOn:
+   - nuget_pack
   pool:
     name: $(macOSVmImage)
     demands:
@@ -118,22 +156,9 @@ jobs:
     iOSCertSecureFileName: 'Xamarin Forms iOS Certificate.p12'
     iOSProvisioningSecureFileName: 'Xamarin Forms iOS Provisioning.mobileprovision'
     monoVersion : $(MONO_VERSION)
-  steps:
-     - template: build/steps/build-osx.yml
-
-- job: nuget_pack
-  displayName: Nuget Phase
-  dependsOn:
-   - win
-  condition: succeeded()
-  pool:
-    name: $(winVmImage)
-  variables:
-    FormsIdAppend: ''
-    buildConfiguration: $(DefaultBuildConfiguration)
     nugetPackageVersion : $[ dependencies.win.outputs['debug.winbuild.xamarinformspackageversion'] ]
   steps:
-     - template: build/steps/build-nuget.yml
+     - template: build/steps/build-osx.yml
 
   # only sign using the private server
 - ${{ if eq(variables['System.TeamProject'], 'devdiv') }}:
