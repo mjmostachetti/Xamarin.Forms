@@ -10,7 +10,7 @@
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup  Condition="'$(MSBuildAssemblyVersion)' != '16.0'">
+  <PropertyGroup Condition="'$(MSBuildAssemblyVersion)' != '16.0'">
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)\$(TargetFramework)</OutputPath>
   </PropertyGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Xamarin.Forms.Core\Xamarin.Forms.Core.csproj">
-  </ProjectReference>
+    </ProjectReference>
     <ProjectReference Include="..\..\Xamarin.Forms.Platform.Android.FormsViewGroup\Xamarin.Forms.Platform.Android.FormsViewGroup.csproj">
     </ProjectReference>
     <ProjectReference Include="..\..\Xamarin.Forms.Platform.Android\Xamarin.Forms.Platform.Android.csproj">

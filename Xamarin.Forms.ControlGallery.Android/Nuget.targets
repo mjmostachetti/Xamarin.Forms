@@ -6,6 +6,9 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Visual.Material" Version="$(XamarinFormsVersion)">
     </PackageReference>
-    <ProjectReference Include="..\Xamarin.Forms.CustomAttributes\Xamarin.Forms.CustomAttributes.csproj" />
+    <ProjectReference Include="..\Xamarin.Forms.CustomAttributes\Xamarin.Forms.CustomAttributes.csproj">
+      <Project>{4DCD0420-1168-4B77-86DB-6196EE4BD491}</Project>
+      <Name>Xamarin.Forms.CustomAttributes</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
