@@ -28,5 +28,11 @@
   <PropertyGroup Condition="'$(AndroidTargetFrameworks)' == ''">
     <AndroidTargetFrameworks>MonoAndroid90;</AndroidTargetFrameworks>
   </PropertyGroup>
+
+  <!-- Build from source or nugets-->
+  <PropertyGroup>
+    <FromSource Condition="'$(FromSource)' == ''">false</FromSource>
+    <XamarinFormsVersion>4.4.0.991265</XamarinFormsVersion>
+  </PropertyGroup>
   
  </Project>
