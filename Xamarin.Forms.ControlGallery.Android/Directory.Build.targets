@@ -1,0 +1,5 @@
+<Project>
+  <Import Project="Source.Build.targets" Condition="$(FromSource) == 'true'" />
+  <Import Project="Nuget.Build.targets" Condition="$(FromSource) == 'false'" />
+
+</Project>

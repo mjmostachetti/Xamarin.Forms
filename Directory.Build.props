@@ -31,7 +31,7 @@
 
   <!-- Build from source or nugets-->
   <PropertyGroup>
-    <FromSource Condition="'$(FromSource)' == ''">false</FromSource>
+    <FromSource Condition="'$(FromSource)' == ''">true</FromSource>
     <XamarinFormsVersion>4.4.0.991265</XamarinFormsVersion>
   </PropertyGroup>
   
