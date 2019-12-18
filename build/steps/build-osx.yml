@@ -46,13 +46,13 @@ steps:
     displayName: 'NuGet restore'
     inputs:
       restoreSolution: $(slnPath)
-      arguments: /p:XamarinFormsVersion=${{ parameters.nugetPackageVersion }}
+      arguments: /p:XamarinFormsVersion=$(nugetPackageVersion)
 
   - task: MSBuild@1
     displayName: 'Build solution Xamarin.Forms.Build.Tasks/Xamarin.Forms.Build.Tasks.csproj'
     inputs:
       solution: Xamarin.Forms.Build.Tasks/Xamarin.Forms.Build.Tasks.csproj
-      msbuildArguments: /p:XamarinFormsVersion=${{ parameters.nugetPackageVersion }}
+      msbuildArguments: /p:XamarinFormsVersion=$(nugetPackageVersion)
 
   - task: InstallAppleCertificate@2
     displayName: 'Install an Apple certificate'
@@ -70,7 +70,7 @@ steps:
     inputs:
       solutionFile: $(slnPath)
       configuration: $(buildConfiguration)
-      args: /p:XamarinFormsVersion=${{ parameters.nugetPackageVersion }}
+      args: /p:XamarinFormsVersion=$(nugetPackageVersion)
 
 
   - task: CopyFiles@2
