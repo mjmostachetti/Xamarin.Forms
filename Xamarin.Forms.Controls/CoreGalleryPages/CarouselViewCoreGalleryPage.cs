@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Xamarin.Forms.CustomAttributes;
 using Xamarin.Forms.Internals;
 
@@ -9,6 +10,8 @@ namespace Xamarin.Forms.Controls
 	internal class CarouselViewCoreGalleryPage : CoreGalleryPage<CarouselView>
 	{
 		private object _currentItem;
+		public ObservableCollection<CarouselData> ItemSourceUnderTest { get; set; }
+		public CarouselView CarouselViewUnderTest { get; set; }
 
 		protected override void InitializeElement(CarouselView element)
 		{
@@ -25,7 +28,11 @@ namespace Xamarin.Forms.Controls
 		{
 			base.Build(stackLayout);
 
-			var currentItemContainer = new ValueViewContainer<CarouselView>(Test.CarouselView.CurrentItem, new CarouselView { HeightRequest = 250, ItemsSource = GetCarouselItems(), ItemsLayout = GetCarouselLayout(ItemsLayoutOrientation.Horizontal), ItemTemplate = GetCarouselTemplate(), CurrentItem = _currentItem }, "CurrentItem", value => value.ToString());
+			ItemSourceUnderTest = new ObservableCollection<CarouselData>(GetCarouselItems());
+			CarouselViewUnderTest = new CarouselView { HeightRequest = 250, IsScrollAnimated = false, IsSwipeEnabled = true, ItemsSource = ItemSourceUnderTest, ItemsLayout = GetCarouselLayout(ItemsLayoutOrientation.Horizontal), ItemTemplate = GetCarouselTemplate(), CurrentItem = _currentItem };
+			CarouselViewUnderTest.CurrentItemChanged += CarouselViewUnderTest_CurrentItemChanged;
+
+			var currentItemContainer = new ValueViewContainer<CarouselView>(Test.CarouselView.CurrentItem, CarouselViewUnderTest, "CurrentItem", value => value.ToString());
 			var isSwipeEnabledContainer = new ValueViewContainer<CarouselView>(Test.CarouselView.IsSwipeEnabled, new CarouselView { IsSwipeEnabled = false, HeightRequest = 250, ItemsSource = GetCarouselItems(), ItemsLayout = GetCarouselLayout(ItemsLayoutOrientation.Horizontal), ItemTemplate = GetCarouselTemplate()}, "IsSwipeEnabled", value => value.ToString());
 			var isScrollAnimatedContainer = new ValueViewContainer<CarouselView>(Test.CarouselView.IsScrollAnimated, new CarouselView { IsScrollAnimated = false, HeightRequest = 250, ItemsSource = GetCarouselItems(), ItemsLayout = GetCarouselLayout(ItemsLayoutOrientation.Horizontal), ItemTemplate = GetCarouselTemplate() }, "IsScrollAnimated", value => value.ToString());
 			var peekAreaInsetsContainer = new ValueViewContainer<CarouselView>(Test.CarouselView.PeekAreaInsets, new CarouselView { PeekAreaInsets = new Thickness(24, 12, 36, 6), HeightRequest = 250, ItemsSource = GetCarouselItems(), ItemsLayout = GetCarouselLayout(ItemsLayoutOrientation.Horizontal), ItemTemplate = GetCarouselTemplate() }, "PeekAreaInsets", value => value.ToString());
@@ -38,13 +45,21 @@ namespace Xamarin.Forms.Controls
 			Add(positionContainer);
 		}
 
+		public int Counter { get; set; } = 0;
+
+		private void CarouselViewUnderTest_CurrentItemChanged(object sender, CurrentItemChangedEventArgs e)
+		{
+			Counter++;
+			ItemSourceUnderTest.Insert(0, new CarouselData { Name = $"Counter {Counter}", Color = Color.Red });
+		}
+
 		internal List<CarouselData> GetCarouselItems()
 		{
 			var random = new Random();
 
 			var items = new List<CarouselData>();
 
-			for (int n = 0; n < 1000; n++)
+			for (int n = 0; n < 5; n++)
 			{
 				items.Add(new CarouselData
 				{
@@ -53,7 +68,7 @@ namespace Xamarin.Forms.Controls
 				});
 			}
 
-			_currentItem = items[5];
+			_currentItem = items[4];
 
 			return items;
 		}
