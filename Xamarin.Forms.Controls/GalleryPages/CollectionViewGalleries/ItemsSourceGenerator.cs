@@ -38,21 +38,30 @@ namespace Xamarin.Forms.Controls.GalleryPages.CollectionViewGalleries
 			};
 
 			var button = new Button { Text = "Update", AutomationId = "btnUpdate"  };
+			var addButton = new Button { Text = "Add To End" };
 			var label = new Label { Text = "Items:", VerticalTextAlignment = TextAlignment.Center };
 			_entry = new Entry { Keyboard = Keyboard.Numeric, Text = initialItems.ToString(), WidthRequest = 100, AutomationId = "entryUpdate" };
 
 
 			layout.Children.Add(label);
+			layout.Children.Add(addButton);
 			layout.Children.Add(_entry);
 
 			layout.Children.Add(button);
 
 			button.Clicked += GenerateItems;
+			addButton.Clicked += AddButton_Clicked;
 			MessagingCenter.Subscribe<ExampleTemplateCarousel>(this, "remove", (obj) => {
 				(cv.ItemsSource as ObservableCollection<CollectionViewGalleryTestItem>).Remove(obj.BindingContext as CollectionViewGalleryTestItem);
 			});
 
 			Content = layout;
+		}
+
+		private void AddButton_Clicked(object sender, EventArgs e)
+		{
+			_obsCollection.Add(new CollectionViewGalleryTestItem(DateTime.Now.AddDays(100),
+						$"Item: {100}", _images[100 % _images.Length], 100));
 		}
 
 		readonly string[] _images =
